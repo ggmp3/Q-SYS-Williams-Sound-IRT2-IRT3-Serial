@@ -1,6 +1,6 @@
 # Q-SYS-Williams-Sound-IRT2-IRT3
 
-- Williams Sound IRT2 / IRT3 IR Hearing Assistance User Component (RS232)
+- Williams Sound IRT2 / IRT3 IR Hearing Assistance Plugin (RS232)
 - Serial Connection - Baud: 115200, Data Bits: 8, Parity: None, Stop Bits: 1, Flow Control: None
 - Written by Glen Gorton
 - Built with Williams Sound IRT2 running firmware v1.2.0
