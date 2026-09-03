@@ -1,0 +1,1186 @@
+-- Information block for the plugin
+PluginInfo = {
+    Name = "Williams Sound~IRT2 / IRT3 Serial", -- Name of the plugin
+    Version = "1.0", -- Current plugin version
+    Id = "qsysc.Williams.Sound.IRT2.Serial", -- Unique identifier for the plugin. Must not conflict with other installed plugins
+    Description = "Plugin for serial control and monitoring of Williams Sound IRT2 / IRT3 hearing assitance IR transmitters.", -- A brief description of the plugin
+    BuildVersion = "0.0.0.0", -- Current code iteration tracking
+    Author = "Glen Gorton", -- Name or Contact Info of the author
+    Manufacturer = "Williams Sound", -- Name of manufacturer the product the plugin integrates
+    -- Model = "", -- Model name of the product the plugin integrates
+    -- IsManaged = true, -- Add the plugin to the managed inventory of the design
+    -- Type = "", -- Reflect reporting type
+    ShowDebug = true,
+  }
+  
+  width = 350 -- scalable plugin width
+  control_depth = 16 -- scalable control depth
+  control_gap = 3 -- vertical space between controls
+  
+  Colors = {
+      none = {0, 0, 0, 0},
+      primary = {212, 202, 226},
+      secondary = {51, 51, 51},
+      heading = {50, 50, 50},
+      label = {50, 50, 50},
+      stroke = {51, 51, 51},
+      black = {51, 51, 51},
+      navy = {15, 63, 106},
+      lightblue = {143, 197, 247},
+      darkgrey = {58,58,58},
+      lightgrey = {204,204,204}
+  }
+  
+  Sizes = {
+      ["Button"] = {36, control_depth},
+      ["Text"] = {(width - 30) / 2, control_depth},
+      ["Text2"] = {(width - 31) / 4, control_depth},
+      ["Text4"] = {(width - 31) / 8, control_depth},
+      ["Status"] = {width - 30, (control_depth * 2) + (control_gap * 1)},
+      ["LED"] = {16, control_depth},
+      ["ListBox"] = {width - 30, (control_depth * 8) + (control_gap * 9)},
+      ["Image"] = {width - 30, (control_depth * 6) + (control_gap * 5)}
+  }
+  
+  Master_Object = {{
+  
+      ["PageName"] = "Status",
+  
+      ["Groupings"] = {{
+          ["Name"] = "Device",
+          ["Depth"] = 17,
+          ["Controls"] = {{
+              Name = "Status",
+              PrettyName = "Device~Status",
+              Label = "Status",
+              ControlType = "Indicator",
+              IndicatorType = "Status",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.Status,
+              GridPos = 1
+          }, {
+              Name = "Connect",
+              PrettyName = "Device~Connect",
+              Label = "Connect",
+              ControlType = "Button",
+              ButtonType = "Toggle",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 3
+          }, {
+              Name = "Connected",
+              PrettyName = "Device~Connected",
+              Label = "Connected",
+              ControlType = "Indicator",
+              IndicatorType = "LED",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.LED,
+              GridPos = 4
+          }, {
+              Name = "Device Runtime",
+              PrettyName = "Device~Device Runtime",
+              Label = "Device Runtime",
+              ControlType = "Indicator",
+              IndicatorType = "Text",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.Text,
+              GridPos = 5
+          }, {
+              Name = "IR LED Runtime",
+              PrettyName = "Device~IR LED Runtime",
+              Label = "IR LED Runtime",
+              ControlType = "Indicator",
+              IndicatorType = "Text",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.Text,
+              GridPos = 6
+            }, {
+              Name = "Firmware Version",
+              PrettyName = "Device~Firmware Version",
+              Label = "Firmware Version",
+              ControlType = "Indicator",
+              IndicatorType = "Text",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.Text,
+              GridPos = 7
+          }, {
+              Name = "Unique ID",
+              PrettyName = "Device~Unique ID",
+              Label = "Unique ID",
+              ControlType = "Indicator",
+              IndicatorType = "Text",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.Text,
+              GridPos = 8
+          }, {
+              Name = "IR Carrier Frequency",
+              PrettyName = "Device~IR Carrier Frequency",
+              Label = "IR Carrier Frequency",
+              ControlType = "Indicator",
+              IndicatorType = "Text",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.Text,
+              GridPos = 9
+          }, {
+              Name = "Audio Detected (ChA)",
+              PrettyName = "Device~Audio Detected (ChA)",
+              Label = "Audio Detected (ChA)",
+              ControlType = "Indicator",
+              IndicatorType = "LED",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.LED,
+              GridPos = 10
+          }, {
+              Name = "Audio Detected (ChB)",
+              PrettyName = "Device~Audio Detected (ChB)",
+              Label = "Audio Detected (ChB)",
+              ControlType = "Indicator",
+              IndicatorType = "LED",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.LED,
+              GridPos = 11
+          }, {
+              Name = "Seconds Until Sleep (ChA)",
+              PrettyName = "Device~Seconds Until Sleep (ChA)",
+              Label = "Seconds Until Sleep (ChA)",
+              ControlType = "Indicator",
+              IndicatorType = "Text",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.Text,
+              GridPos = 12
+          }, {
+              Name = "Seconds Until Sleep (ChB)",
+              PrettyName = "Device~Seconds Until Sleep (ChB)",
+              Label = "Seconds Until Sleep (ChB)",
+              ControlType = "Indicator",
+              IndicatorType = "Text",
+              PinStyle = "Output",
+              UserPin = true,
+              Size = Sizes.Text,
+              GridPos = 13
+          }, {
+              Name = "Audio ChA MinMax",
+              PrettyName = "Device~Audio ChA Min",
+              Label = "Audio ChA Min & Max",
+              ControlType = "Indicator",
+              IndicatorType = "Text",
+              PinStyle = "Output",
+              UserPin = true,
+              Count = 2,
+              Position = (width - 15) - (Sizes.Text2[1] * 2),
+              Size = Sizes.Text2,
+              GridPos = 14
+          }, {
+              Name = "Audio ChB MinMax",
+              PrettyName = "Device~Audio ChB Min",
+              Label = "Audio ChB Min & Max",
+              ControlType = "Indicator",
+              IndicatorType = "Text",
+              PinStyle = "Output",
+              UserPin = true,
+              Count = 2,
+              Position = (width - 15) - (Sizes.Text2[1] * 2),
+              Size = Sizes.Text2,
+              GridPos = 15
+          }, {
+              Name = "IR LED Drive",
+              PrettyName = "Device~IR LED Active",
+              Label = "IR LEDs Active",
+              ControlType = "Indicator",
+              IndicatorType = "LED",
+              PinStyle = "Output",
+              UserPin = true,
+              Count = 4,
+              Position = (width - 15) - (Sizes.LED[1] * 4),
+              Size = Sizes.LED,
+              GridPos = 16
+          }, {
+              Name = "IR LED Current",
+              PrettyName = "Device~IR LED Power Level",
+              Label = "IR LEDs Power Level",
+              ControlType = "Indicator",
+              IndicatorType = "Text",
+              PinStyle = "Output",
+              UserPin = true,
+              Count = 4,
+              Position = (width - 15) - (Sizes.Text4[1] * 4),
+              Size = Sizes.Text4,
+              GridPos = 17
+            }}
+      }}
+  },{
+      ["PageName"] = "Controls",
+  
+      ["Groupings"] = {{
+          ["Name"] = "Triggers",
+          ["Depth"] = 19,
+          ["Controls"] = {{
+              Name = "RF Band 2.3/2.8MHz",
+              PrettyName = "Controls~RF Band 2.3/2.8MHz",
+              Label = "RF Band 2.3/2.8MHz",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 1
+          }, {
+              Name = "RF Band 3.3/3.8MHz",
+              PrettyName = "Controls~RF Band 3.3/3.8MHz",
+              Label = "RF Band 3.3/3.8MHz",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 2
+          }, {
+              Name = "Audio Input Mute",
+              PrettyName = "Controls~Audio Input Mute",
+              Label = "Audio Input Mute",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 4
+          }, {
+              Name = "Audio Input Unmute",
+              PrettyName = "Controls~Audio Input Unmute",
+              Label = "Audio Input Unmute",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 5
+          }, {
+              Name = "Audio Data Reset",
+              PrettyName = "Controls~Audio Data Reset",
+              Label = "Audio Data Reset",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 6
+          }, {
+              Name = "Sleep",
+              PrettyName = "Controls~Sleep",
+              Label = "Sleep",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 8
+          }, {
+              Name = "Wake",
+              PrettyName = "Controls~Wake",
+              Label = "Wake",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 9
+          }, {
+              Name = "IR Power - Full",
+              PrettyName = "Controls~IR Power - Full",
+              Label = "IR Power - Full",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 11
+          }, {
+              Name = "IR Power - Half",
+              PrettyName = "Controls~IR Power - Half",
+              Label = "IR Power - Half",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 12
+          }, {
+              Name = "LEDs Blink",
+              PrettyName = "Controls~LEDs Blink",
+              Label = "LEDs Blink",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 14
+          }, {
+              Name = "LEDs Enable",
+              PrettyName = "Controls~LEDs Enable",
+              Label = "LEDs Enable",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 15
+          }, {
+              Name = "LEDs Disable",
+              PrettyName = "Controls~LEDs Disable",
+              Label = "LEDs Disable",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 16
+          }, {
+              Name = "Reboot",
+              PrettyName = "Controls~Reboot",
+              Label = "Reboot",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 18
+          }, {
+              Name = "Restore Defaults",
+              PrettyName = "Controls~Restore Defaults",
+              Label = "Restore Defaults",
+              ControlType = "Button",
+              ButtonType = "Trigger",
+              PinStyle = "Both",
+              UserPin = true,
+              Size = Sizes.Button,
+              GridPos = 19
+            }}
+    }}
+  }}
+  
+  
+  -- Define the color of the plugin object when dragged into the design
+  function GetColor(props)
+      return Colors.lightblue
+  end
+  
+  -- The name that will initially display when dragged into a design
+  function GetPrettyName(props)
+    return string.format("Williams Sound\nIRT2 / IRT3\nSerial\n[%s]", PluginInfo.Version)
+  end
+  
+  -- Define User configurable Properties of the plugin
+  function GetProperties()
+      local props = {}
+      return props
+  end
+  
+  -- Optional function used if plugin has multiple pages
+  function GetPages(props)
+      local pages = {}
+      for i, tbl in ipairs(Master_Object) do
+        table.insert(pages, {name = tbl.PageName})
+      end
+      return pages
+  end
+  
+  -- Optional function to define pins on the plugin that are not connected to a Control
+  function GetPins(props)
+      local pins = {}
+      table.insert(pins, {
+        Name = "SerialPin",
+        Direction = "input",
+        Domain = "serial"
+        })
+      return pins
+  end
+  
+  -- Optional function to update available properties when properties are altered by the user
+  function RectifyProperties(props)
+      return props
+  end
+  
+  -- Optional function to define components used within the plugin
+  function GetComponents(props)
+      local components = {}
+      return components
+  end
+  
+  -- Optional function to define wiring of components used within the plugin
+  function GetWiring(props)
+      local wiring = {}
+      return wiring
+  end
+  
+  -- Defines the Controls used within the plugin
+  function GetControls(props)
+      local ctls = {}
+      for i, page in ipairs(Master_Object) do
+        for i, grouping in ipairs(page.Groupings) do
+            for i, control in ipairs(grouping.Controls) do
+                table.insert(ctls, control)
+            end
+        end
+      end
+      return ctls
+  end
+  
+  -- Layout of controls and graphics for the plugin UI to display
+  function GetControlLayout(props)
+      local graphics, layout, control_slots = {}, {}, {}
+      
+      local page_index = props["page_index"].Value
+      
+      -- starting depth
+      local total_depth = 0
+      
+      -- dynamically create graphics boxes
+      for i, grouping in ipairs(Master_Object[page_index].Groupings) do
+      
+          total_depth = total_depth + control_depth
+      
+          depth = grouping.Depth
+      
+          len = string.len(grouping.Name)
+      
+          table.insert(graphics, {
+              Type = "GroupBox",
+              Fill = Colors.darkgrey,
+              StrokeColor = Colors.stroke,
+              StrokeWidth = 2,
+              CornerRadius = 8,
+              HTextAlign = "Left",
+              Position = {
+                  0,
+                  total_depth
+              },
+              Size = {
+                  width,
+                  40 + (depth * control_depth) + ((depth - 1) * control_gap)
+              }
+          })
+      
+          -- generate control slots per group box depth and control_depth requirement
+      
+          grouping["Control_Slots"] = {}
+      
+          for n = 1, grouping.Depth do
+      
+              grouping["Control_Slots"][n] = ((total_depth + 25) + (control_depth * (n - 1)) + ((n - 1) * control_gap))
+      
+          end
+      
+          -- dynamically create groupbox labels
+          table.insert(graphics, {
+              Type = "Label",
+              Text = Master_Object[page_index].Groupings[i].Name,
+              -- Size = 11,
+              Color = {
+                  255,
+                  255,
+                  255
+              },
+              Fill = Colors.heading,
+              StrokeWidth = 0,
+              CornerRadius = 4,
+              Position = {
+                  15,
+                  total_depth - 8
+              },
+              Size = {
+                  len <= 12 and 90 or len <= 20 and 140 or len <= 30 and 170,
+                  18
+              },
+              Font = "Montserrat",
+              FontStyle = "Medium"
+          })
+      
+          total_depth = total_depth + 40 + ((depth * control_depth) + ((depth - 1) * control_gap))
+      
+      end
+      
+      -- width of the group box minus borders
+      local box_width = (width - 60)
+      
+      for i, grouping in ipairs(Master_Object[page_index].Groupings) do
+      
+          local Slots = grouping.Control_Slots
+      
+          for _, ctl in ipairs(grouping.Controls) do
+      
+              local pos_x = nil
+              local pos_y = nil
+      
+              if (ctl.Width and (ctl.Width == "Full")) then
+                  pos_x = 15
+                  pos_y = (Slots[ctl.GridPos] + control_depth + control_gap)
+              else
+                  if (ctl.Position) then
+                      pos_x = ctl.Position
+                  else
+                      pos_x = (width - 15) - ctl.Size[1]
+                  end
+                  pos_y = Slots[ctl.GridPos]
+              end
+              --[[
+              layout[ctl.Name] = {
+                  PrettyName = ctl.PrettyName,
+                  Legend = ctl.Legend,
+                  Style = ctl.Style,
+                  Position = {
+                      pos_x,
+                      pos_y
+                  },
+                  Size = ctl.Size,
+                  Font = "Droid Sans",
+                  FontSize = 10
+              }
+              ]]--
+
+              local count = ctl.Count or 1
+
+              for n = 1, count do
+
+                  local controlName = ctl.Name
+                  local prettyName = ctl.PrettyName
+
+                  if count > 1 then
+                      controlName = string.format("%s %d", ctl.Name, n)
+
+                      if ctl.PrettyName then
+                          prettyName = string.format("%s %d", ctl.PrettyName, n)
+                      end
+                  end
+
+                  layout[controlName] = {
+                      PrettyName = prettyName,
+                      Legend = ctl.Legend,
+                      Style = ctl.Style,
+                      Position = {
+                          pos_x + ((n - 1) * ctl.Size[1]),
+                          pos_y
+                      },
+                      Size = ctl.Size,
+                      Font = "Droid Sans",
+                      FontSize = 10
+                  }
+              end
+
+              if count == 1 then
+                layout[ctl.Name] = {
+                    PrettyName = ctl.PrettyName,
+                    Legend = ctl.Legend,
+                    Style = ctl.Style,
+                    Position = {
+                        pos_x,
+                        pos_y
+                    },
+                    Size = ctl.Size,
+                    Font = "Droid Sans",
+                    FontSize = 10
+                }
+              else
+                for n = 1, count do
+                    layout[ctl.Name .. "[" .. n .. "]"] = {
+                        PrettyName = ctl.PrettyName,
+                        Legend = ctl.Legend,
+                        Style = ctl.Style,
+                        Position = {
+                            pos_x + ((n - 1) * ctl.Size[1]),
+                            pos_y
+                        },
+                        Size = ctl.Size,
+                        Font = "Droid Sans",
+                        FontSize = 10
+                    }
+                end
+              end
+
+              if ctl.Label then
+                  table.insert(graphics, {
+                      Type = "Label",
+                      Text = ctl.Label,
+                      HTextAlign = "Left",
+                      Color = Colors.lightgrey,
+                      Font = "Droid Sans",
+                      Position = {
+                          15,
+                          (Slots[ctl.GridPos] ~= nil) and Slots[ctl.GridPos] or Slots[#Slots]
+                      },
+                      Size = {
+                          (ctl.Width == "Full") and (width - 30) or (width - 30) - ctl.Size[1],
+                          control_depth
+                      }
+                  })
+              end
+      
+          end
+      
+      end
+      return layout, graphics
+  end
+  
+  
+  
+  ------------------------ USER COMPONENT Runtime Code is below wrapped inside of 'if Controls then...user script...end'
+  --Start event based logic
+  if Controls then
+
+--[[
+
+# Q-SYS-Williams-Sound-IRT2-IRT3
+
+- Williams Sound IRT2 / IRT3 IR Hearing Assistance Plugin (RS232)
+- Serial Connection - Baud: 115200, Data Bits: 8, Parity: None, Stop Bits: 1, Flow Control: None
+- Written by Glen Gorton
+- Built with Williams Sound IRT2 running firmware v1.2.0
+- Developed and tested using Q-SYS Designer v10.4.1
+
+## NOTES:
+
+- Script has been written with a focus on the William Sounds IRT2 / IRT3 running in 'Monitoring Mode'.
+- Script is written to Connect() to device, set it to Command Mode, Reboot the device (in order to obtain firmware version and runtimes), then set it to Monitoring Mode.
+- When individual commands are triggered, the device is first set to Command Mode so it will accept the command, command send, then device returned to Monitoring Mode (ie. 3x commands are sent)
+- As a result, 'Monitoring Mode' and 'Command Mode' controls (booleans) have been commented out and the individual controls deleted -> can be re-added if needed.
+- 'Unique ID', 'Audio ChA Data' and 'Audio ChB Data' is also obtained prior to the reboot at script start. Control EventHandlers have been commented out and control deleted -> can be re-added if needed.
+- 'Help' control (trigger) also deleted and commented out.
+
+-- Command Mode commands:
+- audio_minmax_reset = Reset CHA & CHB audio capture data
+- audio_minmax_cha = min and max of CHA audio since reset
+- audio_minmax_chb = min and max of CHB audio since reset
+- sleep_now = Put the IR T2 to sleep immediately, if there is no audio
+- wake_now = Wake up the IR T2 immediately, even without audio
+- mute_audio_input=on = Mute the audio (on reboot, the audio will not be muted)
+- mute_audio_input=off = Unmute the audio
+- ir_low_power_mode=0 = Put the IR T2 in full power mode for stronger infrared coverage
+- ir_low_power_mode=1 = Put the IR T2 in 1/2 power mode for less infrared coverage
+- rf_band_select=0 = Change the broadcast channel(s) to 2.3/2.8 MHz IR
+- rf_band_select=1 = Change the broadcast channel(s) to 3.3/3.8 MHz IR
+- restore_defaults = Reset all settings to the default
+- reboot_unit = Restart the IR T2
+- visible_leds=enable = Turn on the LED status indicator lights on the back of the unit
+- visible_leds=disable = Turn off all of the LED status indicator lights on the back of the unit
+- visible_leds=blink_5sec = Turn off and on all of the LED lights for 5 seconds
+- unique_id = Display the unique identifier for this IR T2 unit
+
+### 5th August 2026 - Glen Gorton
+- Timer.CallAfter surrounds the entire script as the intial 'Force Command Mode' command within GetFirmwareAndRuntime() does not work following a design load. Possibly behaviour of the serial port?
+- readTimeout Timer used to detect if any SerialPorts.Events has been received, and if not set a Fault Status.
+- Device total runtime (deviceTotalRuntime) is appended to the Status.
+
+]]--
+
+Timer.CallAfter(function() 
+
+  serial = SerialPorts[1]
+  readTimeout = Timer.New()
+
+  function Initialize()
+    serial:Close()
+    Controls["Connected"].Boolean = false
+    Controls["IR Carrier Frequency"].String = ""
+    Controls["Seconds Until Sleep (ChA)"].String = ""
+    Controls["Seconds Until Sleep (ChB)"].String = ""
+    Controls["Audio Detected (ChA)"].Boolean = false
+    Controls["Audio Detected (ChB)"].Boolean = false
+    --Controls["Monitoring Mode"].Boolean = false
+    --Controls["Command Mode"].Boolean = false
+    Controls["Firmware Version"].String = ""
+    Controls["Device Runtime"].String = ""
+    Controls["IR LED Runtime"].String = ""
+    Controls["Unique ID"].String = ""
+
+    for i,ctl in ipairs(Controls["IR LED Drive"]) do
+      Controls["IR LED Drive"][i].Boolean = false
+    end  
+    
+    for i,ctl in ipairs(Controls["IR LED Current"]) do
+      Controls["IR LED Current"][i].String = ""
+    end
+
+    for i,ctl in ipairs(Controls["Audio ChA MinMax"]) do
+      Controls["Audio ChA MinMax"][i].String = ""
+    end
+
+    for i,ctl in ipairs(Controls["Audio ChB MinMax"]) do
+      Controls["Audio ChB MinMax"][i].String = ""
+    end
+
+    SetStatus(5, "")
+    Connect()
+  end
+
+  function Connect()
+    if Controls["Connect"].Boolean == true then
+      if not serial.IsOpen then
+        print("User.Info: Connecting Serial Port...")
+        SetStatus(5, "Serial Port Connecting...")
+        serial:Open(115200, 8, "N", 1)
+      end
+    else
+      print("User.Info: Serial Connection Closed...")
+      Controls["Connected"].Boolean = false
+      SetStatus(3, "Component Manually Disconnected")
+      serial:Close()
+      readTimeout:Stop()
+    end
+  end
+
+  function SetStatus(code, message)
+    Controls["Status"].Value = code
+    Controls["Status"].String = message
+    if (code ~= 0) then return print(string.format("User.Info: Settings Status with Code: '%d', Message: '%s'", code, message)) end
+    if (code == 2) then SetPresetColor() end
+  end
+
+  -- Function will set device to Command Mode, Reboot the device (in order to obtain firmware version and runtimes), then set it to Monitoring Mode.
+  function GetFirmwareAndRuntime()
+    if not serial.IsOpen then 
+      Controls["Connected"].Boolean = false
+      return print('!! Serial Port Not Open')
+    end
+
+    print("GetFirmwareAndRuntime() function running...")
+    -- Force Command Mode
+    serial:Write("{")
+    -- Unique ID Command
+    Timer.CallAfter(function() serial:Write("unique_id\r\n") end, .5)
+    -- Get ChA Audio Data Command - min and max of CHA audio since reset
+    Timer.CallAfter(function() serial:Write("audio_minmax_cha\r\n") end, 1)
+    -- Get ChB Audio Data Command - min and max of CHB audio since reset
+    Timer.CallAfter(function() serial:Write("audio_minmax_chb\r\n") end, 1.5)
+    -- Reboot Device
+    Timer.CallAfter(function() serial:Write("reboot_unit\r\n") end, 2)
+    -- Force Monitoring Mode
+    Timer.CallAfter(function() serial:Write("}") end, 12)
+  end
+
+  readTimeout.EventHandler = function()
+    SetStatus(2, "Not Responding - Read Timeout: Possible power supply failure.")
+    -- set the 'connected' indicator
+    Controls["Connected"].Boolean = false
+  end
+
+  serial.EventHandler = function(port, event)
+    
+    if not serial.IsOpen then 
+      Controls["Connected"].Boolean = false
+      return print('!! Serial Port Not Open')
+    end
+
+    -- Start the Timer that checks for responses and sets Fault Status via the EventHandler if no responses received.
+    readTimeout:Start(30)
+
+    if event == SerialPorts.Events.Connected then
+      print("Sock.Info: Serial Port Now Open")
+      --Controls["Connected"].Boolean = true
+      --SetStatus(0, "")
+
+      -- Call function to set device to Command Mode, Reboot the device (in order to obtain firmware version and runtimes), then set it to Monitoring Mode.
+      GetFirmwareAndRuntime()
+    end
+
+    if event == SerialPorts.Events.Reconnect then
+      print("Sock.Info: Serial Port Reconnecting")
+      SetStatus(5, "Serial Port Reconnecting")
+    end
+
+    if event == SerialPorts.Events.Closed then
+      print("Sock.Info: Serial Port Closed")
+      Controls["Connected"].Boolean = false
+      SetStatus(1, "Serial Port Closed")
+    end
+
+    if event == SerialPorts.Events.Error then
+      print("Sock.Info: Serial Port Error")
+      Controls["Connected"].Boolean = false
+      SetStatus(1, string.format("Serial Port Disconnected with Error: %s", event))
+    end
+
+    if event == SerialPorts.Events.Timeout then
+      print("Sock.Info: Serial Port Timeout")
+      Controls["Connected"].Boolean = false
+      SetStatus(1, "Serial Port Timeout")
+    end
+
+    if event == SerialPorts.Events.Data then
+      local data = port:ReadLine(SerialPorts.EOL.Any)
+      while data ~= nil do
+        print( "read line", data)
+
+        -- Update Status using the UNIT STATUS response.
+        if data:find("self tests=", 1, true) then
+          --Controls["Monitoring Mode"].Boolean = true
+          --Controls["Command Mode"].Boolean = false
+          if data:find("self tests=!ERROR", 1, true) then
+            err = data:match("self tests=!ERROR(.*)")
+            print("Error: ", err)
+            SetStatus(1, err.." - Runtime: "..deviceTotalRuntime)
+          elseif data:find("self tests=PASS", 1, true) then
+            SetStatus(0, "Runtime: "..deviceTotalRuntime)
+          end
+
+        -- Update ChA 'Seconds Unitl Sleep' and ChA 'Audio Detected'.
+        elseif data:find("CHA=", 1, true) then
+          -- checks if response contains digits (Seconds Until Sleep)
+          if data:match("CHA=(%d+)") then
+            ChASleep = data:match("CHA=(%d+)")
+            --print("ChA Seconds Unitl Sleep: "..ChASleep)
+            Controls["Seconds Until Sleep (ChA)"].String = ChASleep
+          -- checks if response contains alphabetic characters (Audio Detected YES/NO)
+          elseif data:match("CHA=(%a+)") then
+            ChAAudioDetected = data:match("CHA=(%a+)")
+            --print("ChA Audio Detected: "..ChAAudioDetected)
+            if ChAAudioDetected == "NO" then
+              Controls["Audio Detected (ChA)"].Boolean = false
+            elseif ChAAudioDetected == "YES" then
+              Controls["Audio Detected (ChA)"].Boolean = true
+            end
+          end
+
+        -- Update ChB 'Seconds Unitl Sleep' and ChB 'Audio Detected'.
+        elseif data:find("CHB=", 1, true) then
+          -- checks if response contains digits (Seconds Until Sleep)
+          if data:match("CHB=(%d+)") then
+            ChBSleep = data:match("CHB=(%d+)")
+            --print("ChB Seconds Unitl Sleep: "..ChBSleep)
+            Controls["Seconds Until Sleep (ChB)"].String = ChBSleep
+          -- checks if response contains alphabetic characters (Audio Detected YES/NO)
+          elseif data:match("CHB=(%a+)") then
+            ChBAudioDetected = data:match("CHB=(%a+)")
+            --print("ChB Audio Detected: "..ChBAudioDetected)
+            if ChBAudioDetected == "NO" then
+              Controls["Audio Detected (ChB)"].Boolean = false
+            elseif ChBAudioDetected == "YES" then
+              Controls["Audio Detected (ChB)"].Boolean = true
+            end
+          end      
+
+        -- Update 'IR Carrier Frequency' combo box.
+        elseif data:find("freq= ", 1, true) then
+          freq = data:match("freq= (.+)$")
+          print("IR Carrier Frequency: "..freq)
+          if freq == "OFF(sleep)" then
+            Controls["IR Carrier Frequency"].String = "Off (Sleep)"
+          elseif freq == "2.3MHz 2.8MHz" then
+            Controls["IR Carrier Frequency"].String = "2.3/2.8MHz"
+          elseif freq == "3.3MHz 3.8MHz" then
+            Controls["IR Carrier Frequency"].String = "3.3/3.8MHz"
+          end
+
+        -- Update 'IR LED Drive' indicators and 'IR LED Current' fields.
+        elseif data:match("string(%d+)=", 1, true) then
+          local index, value = data:match("string(%d+)=(.+)$")
+            --print(index, value)
+            if value:match("OFF") then
+              Controls["IR LED Drive"][tonumber(index)].Boolean = false
+            elseif value:match("ON") then
+              Controls["IR LED Drive"][tonumber(index)].Boolean = true
+            else
+              Controls["IR LED Current"][tonumber(index)].String = value
+            end
+
+        -- Update 'Unique ID' field.
+        elseif data:find("ID=", 1, true) then
+          Controls["Unique ID"].String = data:match("ID=(.+)$")
+
+        -- Update 'Audio ChA Min' field.
+        elseif data:find("min_audio_measured_CHA(P2.1)=", 1, true) then
+          Controls["Audio ChA MinMax"][1].String = data:match("min_audio_measured_CHA%(P2%.1%)=(.+)$")
+
+        -- Update 'Audio ChA Max' field.
+        elseif data:find("max_audio_measured_CHA(P2.1)=", 1, true) then
+          Controls["Audio ChA MinMax"][2].String = data:match("max_audio_measured_CHA%(P2%.1%)=(.+)$")
+
+        -- Update 'Audio ChB Min' field.
+        elseif data:find("min_audio_measured_CHB(P2.2)=", 1, true) then
+          Controls["Audio ChB MinMax"][1].String = data:match("min_audio_measured_CHB%(P2%.2%)=(.+)$")
+
+        -- Update 'Audio ChB Max' field.
+        elseif data:find("max_audio_measured_CHB(P2.2)=", 1, true) then
+          Controls["Audio ChB MinMax"][2].String = data:match("max_audio_measured_CHB%(P2%.2%)=(.+)$")
+
+        -- Update 'Firmware Version' field.
+        elseif data:find("fw_rev=", 1, true) then
+          Controls["Firmware Version"].String = data:match("fw_rev=(.+)$")
+          -- Force Monitoring Mode -- secondary request to set to Monitoring Mode in the off chance power/serial is disconnected during the GetFirmwareAndRuntime() reboot.
+          serial:Write("}")
+
+        -- Update 'Device Runtime' field.
+        elseif data:find("meter_unit", 1, true) then
+          if data:match("meter_unit_days=(.+)$") ~= nil then
+            runtimeDays = data:match("meter_unit_days=(.+)$")
+          elseif data:match("meter_unit_hours=(.+)$") ~= nil then
+            runtimeHours = data:match("meter_unit_hours=(.+)$")
+          elseif data:match("meter_unit_minutes=(.+)$") ~= nil then 
+            runtimeMinutes = data:match("meter_unit_minutes=(.+)$")
+          end
+          if runtimeDays and runtimeHours and runtimeMinutes ~= nil then
+            deviceTotalRuntime = string.format("%.2f", (tonumber(runtimeDays) * 24) + tonumber(runtimeHours) + (tonumber(runtimeMinutes) / 60)).."hrs"
+            Controls["Device Runtime"].String = deviceTotalRuntime
+          end
+
+        -- Update 'IR LED Runtime' field.
+        elseif data:find("meter_ir_leds", 1, true) then
+          if data:match("meter_ir_leds_days=(.+)$") ~= nil then
+            runtimeDaysLED = data:match("meter_ir_leds_days=(.+)$")
+          elseif data:match("meter_ir_leds_hours=(.+)$") ~= nil then
+            runtimeHoursLED = data:match("meter_ir_leds_hours=(.+)$")
+          elseif data:match("meter_ir_leds_minutes=(.+)$") ~= nil then 
+            runtimeMinutesLED = data:match("meter_ir_leds_minutes=(.+)$")
+          end
+          if runtimeDaysLED and runtimeHoursLED and runtimeMinutesLED ~= nil then 
+            Controls["IR LED Runtime"].String = string.format("%.2f", (tonumber(runtimeDaysLED) * 24) + tonumber(runtimeHoursLED) + (tonumber(runtimeMinutesLED) / 60)).."hrs"
+          end
+        end
+
+        data = port:ReadLine(SerialPorts.EOL.Any)
+
+      end
+    end
+  end
+
+
+  --[[
+  Controls["Monitoring Mode"].EventHandler = function()
+    if Controls["Monitoring Mode"].Boolean == true then
+      if serial.IsOpen then
+      -- Force Monitoring Mode
+      serial:Write("}")
+      else
+        print("User.Info: Serial Connection not Open")
+      end
+    end
+  end
+
+  Controls["Command Mode"].EventHandler = function()
+    if Controls["Command Mode"].Boolean == true then
+      if serial.IsOpen then
+      -- Force Command Mode
+      serial:Write("{")
+      -- set Monitoring Mode boolean to false -> setting Command Mode does not provide a response to confirm Command Mode is active.
+      Controls["Monitoring Mode"].Boolean = false
+      else
+        print("User.Info: Serial Connection not Open")
+      end
+    end
+  end
+
+  Controls["Unique ID"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Unique ID Command
+      Timer.CallAfter(function() serial:Write("unique_id\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["Audio ChA Data"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Get ChA Audio Data Command - min and max of CHA audio since reset
+      Timer.CallAfter(function() serial:Write("audio_minmax_cha\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["Audio ChB Data"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Get ChB Audio Data Command - min and max of CHB audio since reset
+      Timer.CallAfter(function() serial:Write("audio_minmax_chb\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["Help"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Help Command
+      Timer.CallAfter(function() serial:Write("help\r\n") end, .5)
+    end
+  end
+  ]]--
+
+  Controls["Connect"].EventHandler = function(ctl)
+    Connect()
+  end
+  
+  Controls["Audio Data Reset"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Audio Data Reset Command - Reset CHA & CHB audio capture data
+      Timer.CallAfter(function() serial:Write("audio_minmax_reset\r\n") end, .5)
+      -- Get ChA Audio Data Command - min and max of CHA audio since reset
+      Timer.CallAfter(function() serial:Write("audio_minmax_cha\r\n") end, .6)
+      -- Get ChB Audio Data Command - min and max of CHB audio since reset
+      Timer.CallAfter(function() serial:Write("audio_minmax_chb\r\n") end, .7)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["Sleep"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Sleep Command
+      Timer.CallAfter(function() serial:Write("sleep_now\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["Wake"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Wake Command
+      Timer.CallAfter(function() serial:Write("wake_now\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["Audio Input Mute"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Mute Audio Input Command
+      Timer.CallAfter(function() serial:Write("mute_audio_input=on\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["Audio Input Unmute"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Unmute Audio Input Command
+      Timer.CallAfter(function() serial:Write("mute_audio_input=off\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["IR Power - Full"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- IR Full Power Mode Command
+      Timer.CallAfter(function() serial:Write("ir_low_power_mode=0\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+  
+  Controls["IR Power - Half"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- IR Low Power Mode Command
+      Timer.CallAfter(function() serial:Write("ir_low_power_mode=1\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["RF Band 2.3/2.8MHz"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Select RF Band 2.3/2.8MHz Command
+      Timer.CallAfter(function() serial:Write("rf_band_select=0\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end 
+
+  Controls["RF Band 3.3/3.8MHz"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Select RF Band 3.3/3.8MHz Command
+      Timer.CallAfter(function() serial:Write("rf_band_select=1\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["Restore Defaults"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Restore Defaults Command - device will also Reboot
+      Timer.CallAfter(function() serial:Write("restore_defaults\r\n") end, .5)
+    end
+  end 
+
+  Controls["Reboot"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- Reboot Device
+      Timer.CallAfter(function() serial:Write("reboot_unit\r\n") end, .5)
+    end
+  end
+
+  Controls["LEDs Enable"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- LEDs Enable Command
+      Timer.CallAfter(function() serial:Write("visible_leds=enable\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end  
+  
+  Controls["LEDs Disable"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- LEDs Disable Command
+      Timer.CallAfter(function() serial:Write("visible_leds=disable\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Controls["LEDs Blink"].EventHandler = function()
+    if serial.IsOpen then
+      -- Set Command Mode
+      serial:Write("{")
+      -- LEDs Blink for 5 Seconds Command
+      Timer.CallAfter(function() serial:Write("visible_leds=blink_5sec\r\n") end, .5)
+      -- Return to Monitoring Mode
+      Timer.CallAfter(function() serial:Write("}") end, 2)
+    end
+  end
+
+  Initialize()
+
+end, 5)
+
+end
